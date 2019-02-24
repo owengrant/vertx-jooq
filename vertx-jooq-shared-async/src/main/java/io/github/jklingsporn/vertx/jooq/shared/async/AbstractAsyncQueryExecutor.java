@@ -52,7 +52,12 @@ public abstract class AbstractAsyncQueryExecutor<FIND_MANY_JSON, FIND_ONE_JSON, 
             for (Map.Entry<String, Object> jsonMap : json.getMap().entrySet()) {
                 Converter<Object, Object> converter = pojoConverters.get(jsonMap.getKey());
                 if(converter!=null){
-                    theCopy.put(jsonMap.getKey(), converter.from(jsonMap.getValue()));
+					Object val = converter.from(jsonMap.getValue());
+					if(val instanceof JsonPojo){
+						theCopy.put(jsonMap.getKey(), ((JsonPojo)val).toJson());
+					}else{	
+						theCopy.put(jsonMap.getKey(), val);
+					}	
                 }else{
                     theCopy.put(jsonMap.getKey(), jsonMap.getValue());
                 }

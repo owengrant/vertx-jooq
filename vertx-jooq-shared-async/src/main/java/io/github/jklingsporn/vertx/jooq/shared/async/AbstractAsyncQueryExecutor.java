@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import io.github.jklingsporn.vertx.jooq.shared.JsonType;
 
 /**
  * @param <FIND_MANY_JSON> a type to represent many <code>JsonObject</code>s.
@@ -52,12 +53,12 @@ public abstract class AbstractAsyncQueryExecutor<FIND_MANY_JSON, FIND_ONE_JSON, 
             for (Map.Entry<String, Object> jsonMap : json.getMap().entrySet()) {
                 Converter<Object, Object> converter = pojoConverters.get(jsonMap.getKey());
                 if(converter!=null){
-					Object val = converter.from(jsonMap.getValue());
-					if(val instanceof JsonPojo){
-						theCopy.put(jsonMap.getKey(), ((JsonPojo)val).toJson());
-					}else{	
-						theCopy.put(jsonMap.getKey(), val);
-					}	
+                    Object val = converter.from(jsonMap.getValue());
+                    if(val instanceof JsonType){
+                            theCopy.put(jsonMap.getKey(), ((JsonType)val).toType());
+                    }else{	
+                            theCopy.put(jsonMap.getKey(), val);
+                    }	
                 }else{
                     theCopy.put(jsonMap.getKey(), jsonMap.getValue());
                 }
